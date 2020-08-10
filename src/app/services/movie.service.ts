@@ -11,28 +11,31 @@ export class MovieService {
   private url = "https://api.themoviedb.org/3/movie/popular";
 
   private api_key = "7999d12156215ef54a9ab9fe0635d2dc";
+  movies: Movie[];
 
 
   constructor(private httpClient: HttpClient) { }
 
 
-  getMovies(): Observable<Movie[]> {
+  getMovies(): Movie[] {
 
     // need to build URL based on product id
-    console.log("Fetching");
 
-    return this.httpClient.get<GetResponseProducts>(`${this.url}?api_key=${this.api_key}`).pipe(map(
-      response => response.results.movie));
+
+    this.httpClient.get<GetResponseProducts>(`${this.url}?api_key=${this.api_key}`).pipe(map(
+      response => this.movies = response.results.movie));
+
+    console.log(this.movies);
+    return this.movies;
 
   }
 }
 
 interface GetResponseProducts {
-
   "page": number,
   "total_results": number,
   "total_pages": number,
-  results: {
+  "results": {
     movie: Movie[];
   }
 }

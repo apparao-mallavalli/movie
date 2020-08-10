@@ -16,13 +16,9 @@ export class MoviesComponent implements OnInit {
   public movies: Movie[];
   language: string;
   sort: number;
-  private url = "https://api.themoviedb.org/3/movie/popular";
-
-  private api_key = "7999d12156215ef54a9ab9fe0635d2dc";
 
 
-
-  constructor(private moviesService: MovieService, private router: Router, public http: HttpClient) { }
+  constructor(private movieService: MovieService, private router: Router, public http: HttpClient) { }
 
   ngOnInit(): void {
     this.language = 'en';
@@ -31,23 +27,15 @@ export class MoviesComponent implements OnInit {
 
   }
   getMovies() {
-    this.moviesService.getMovies().subscribe(
-      movie => this.movies = movie)
 
-    // this.movies = this.http.get<GetResponseProducts>(`${this.url}?api_key=${this.api_key}`).pipe(map(
-    //   response => response.results.movie));
+    this.movies = this.movieService.getMovies();
 
-
+    //console.log(this.movies);
 
   }
 
-}
-interface GetResponseProducts {
-
-  "page": number,
-  "total_results": number,
-  "total_pages": number,
-  results: {
-    movie: Movie[];
+  processResult() {
+    return data => { this.movies = data };
   }
+
 }

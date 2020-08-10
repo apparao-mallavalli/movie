@@ -9,6 +9,7 @@ import { BookmarksComponent } from './components/bookmarks/bookmarks.component';
 import { MoviesComponent } from './components/movies/movies.component';
 import { SearchComponent } from './components/search/search.component';
 import { MovieService } from './services/movie.service';
+import { HttpClientModule } from '@angular/common/http';
 
 
 const routes: Routes = [
@@ -28,7 +29,8 @@ const routes: Routes = [
   ],
   imports: [
     RouterModule.forRoot(routes),
-    BrowserModule
+    BrowserModule,
+    HttpClientModule
   ],
   providers: [MovieService],
   bootstrap: [AppComponent]
