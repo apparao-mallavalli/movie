@@ -7,29 +7,30 @@ import { AppComponent } from './app.component';
 //import { SearchComponent } from './components/search/search.component';
 import { BookmarksComponent } from './components/bookmarks/bookmarks.component';
 import { MoviesComponent } from './components/movies/movies.component';
-import { MoviesService } from './components/movies/movies.service';
+import { SearchComponent } from './components/search/search.component';
+import { MovieService } from './services/movie.service';
 
 
 const routes: Routes = [
 
-  
+
   { path: 'bookmarks', component: BookmarksComponent },
   { path: 'movies', component: MoviesComponent },
+  { path: 'search', component: SearchComponent },
   { path: '**', component: MoviesComponent }
 ]
 @NgModule({
   declarations: [
     AppComponent,
-
-   
     BookmarksComponent,
-    MoviesComponent
+    MoviesComponent,
+    SearchComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
     BrowserModule
   ],
-  providers: [MoviesService],
+  providers: [MovieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

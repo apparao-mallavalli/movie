@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Movie } from './movie';
-import { MoviesService } from './movies.service';
 import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
+import { MovieService } from 'src/app/services/movie.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-movies',
@@ -12,61 +13,41 @@ import { map } from 'rxjs/operators';
 })
 export class MoviesComponent implements OnInit {
 
-  movies: Observable<Movie[]>;
+  public movies: Movie[];
   language: string;
   sort: number;
+  private url = "https://api.themoviedb.org/3/movie/popular";
 
-  constructor(private moviesService: MoviesService, private router: Router) { }
+  private api_key = "7999d12156215ef54a9ab9fe0635d2dc";
+
+
+
+  constructor(private moviesService: MovieService, private router: Router, public http: HttpClient) { }
 
   ngOnInit(): void {
-    this.language = this.moviesService.getLanguage();
-
+    this.language = 'en';
 
     this.getMovies();
 
   }
   getMovies() {
-    this.movies = this.moviesService.getMovies();
+    this.moviesService.getMovies().subscribe(
+      movie => this.movies = movie)
 
-    // console.log(this.movies);
-  }
-  dynamicSort(property) {
-    let sortOrder = 1;
-    if (property[0] === "-") {
-      sortOrder = -1;
-      property = property.substr(1);
-    }
-    return function (a, b) {
-      let result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
-      return result * sortOrder;
-    }
+    // this.movies = this.http.get<GetResponseProducts>(`${this.url}?api_key=${this.api_key}`).pipe(map(
+    //   response => response.results.movie));
+
+
+
   }
 
-  sortMovies(property: string) {
-    if (property == 'title') {
-      if (this.sort == 1) {
-        this.movies = this.movies.pipe(map(items => items.sort(this.dynamicSort("-title"))));
-        this.sort = -1;
-      }
-      else {
-        this.movies = this.movies.pipe(map(items => items.sort(this.dynamicSort("title"))));
-        this.sort = 1;
-      }
-    }
-    else if (property == 'popularity') {
-      if (this.sort == 2) {
-        this.movies = this.movies.pipe(map(items => items.sort(this.dynamicSort("-popularity"))));
-        this.sort = -2;
-      }
-      else {
-        this.movies = this.movies.pipe(map(items => items.sort(this.dynamicSort("popularity"))));
-        this.sort = 2;
-      }
-    }
-  }
+}
+interface GetResponseProducts {
 
-  onSelect(movie: Movie) {
-    this.router.navigate(['./../movie', movie.id]);
+  "page": number,
+  "total_results": number,
+  "total_pages": number,
+  results: {
+    movie: Movie[];
   }
-
 }
